@@ -6,6 +6,37 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
+import random
+
+
+class UserAgentMiddleware(object):
+    user_agent_list = [
+        "Mozilla/5.0 (Linux; Android 8.0.0; SM-G960F Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.84 Mobile Safari/537.36",
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) FxiOS/13.2b11866 Mobile/16A366 Safari/605.1.15",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246",
+        "Mozilla/5.0 (X11; CrOS x86_64 8172.45.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.64 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_2) AppleWebKit/601.3.9 (KHTML, like Gecko) Version/9.0.2 Safari/601.3.9",
+    ]
+
+    def process_request(self, request, spider):
+        request.meta['User-Agent'] = random.choice(self.user_agent_list)
+
+
+# TODO: no ip proxy pools for test
+# class ProxyMiddleware(object):
+#     def process_request(self, request, spider):
+#         if 'proxy' not in request.meta:
+#             request.meta['proxy'] = proxy_address
+#
+#     def process_response(self, request, response, spider):
+#         if response.status != 200:
+#             # proxy ip is not allow, update it?
+#             return request
+#         return response
+#
+#     def process_exception(self, request, response, spider):
+#         # retry it?
+#         pass
 
 
 class JobSpiderMiddleware(object):

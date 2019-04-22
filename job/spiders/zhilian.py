@@ -3,7 +3,7 @@ import scrapy
 import json
 from job.items import JobItem
 from scrapy_redis.spiders import RedisSpider
-
+from scrapy.http import response
 
 class ZhilianSpider(RedisSpider):
     name = 'zhilian'

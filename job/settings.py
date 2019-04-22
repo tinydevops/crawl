@@ -58,9 +58,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-# DOWNLOADER_MIDDLEWARES = {
-#    'job.middlewares.JobDownloaderMiddleware': 543,
-# }
+DOWNLOADER_MIDDLEWARES = {
+    # 'job.middlewares.JobDownloaderMiddleware': 543,
+    'job.middlewares.UserAgentMiddleware',
+}
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
@@ -73,7 +74,7 @@ DEFAULT_REQUEST_HEADERS = {
 ITEM_PIPELINES = {
     'job.pipelines.JobPipelineMongodb': 300,
     'scrapy_redis.pipelines.RedisPipeline': 300,
-    # 'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500,
+    'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
@@ -98,18 +99,21 @@ ITEM_PIPELINES = {
 # HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # elasticsearch
-ELASTICSEARCH_SERVERS = ['localhost']
-ELASTICSEARCH_INDEX = 'scrapy'
-ELASTICSEARCH_INDEX_DATE_FORMAT = '%Y-%m-%d'
-ELASTICSEARCH_TYPE = 'items'
-ELASTICSEARCH_UNIQ_KEY = 'url'  # Custom unique key
+ELASTICSEARCH_SERVERS = ['localhost', ]
+ELASTICSEARCH_PORT = 9200
+ELASTICSEARCH_INDEX = 'zhilian'
+# 缓存10个数据开始写入elasticsearch数据库
+ELASTICSEARCH_BUFFER_LENGTH = 10
+ELASTICSEARCH_TYPE = 'jobs'
+ELASTICSEARCH_UNIQ_KEY = 'positionURL'  # Custom unique key
 
 # mongodb
-MONGODB_HOST = '127.0.0.1'
+MONGODB_HOST = 'localhost'
 MONGODB_PORT = 27017
 MONGODB_DBNAME = 'zhilian'  # 数据库名
 MONGODB_DOCNAME = 'jobs'  # 表名
 
+# redis
 # Enables scheduling storing requests queue in redis.
 SCHEDULER = "scrapy_redis.scheduler.Scheduler"
 
@@ -121,7 +125,6 @@ SCHEDULER_PERSIST = True
 
 # The item pipeline serializes and stores the items in this redis key.
 REDIS_ITEMS_KEY = '%(spider)s:items'
-
 
 # Specify the host and port to use when connecting to Redis (optional).
 REDIS_HOST = 'localhost'
