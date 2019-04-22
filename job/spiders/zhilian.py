@@ -2,16 +2,17 @@
 import scrapy
 import json
 from job.items import JobItem
+from scrapy_redis.spiders import RedisSpider
 
 
-class ZhilianSpider(scrapy.Spider):
+class ZhilianSpider(RedisSpider):
     name = 'zhilian'
     allowed_domains = ['zhaopin.com']
     start_seq = 0
     base_url = 'https://fe-api.zhaopin.com/c/i/sou?start=%d&pageSize=90&cityId=801&workExperience=-1&education=-1&companyType=-1&employmentType=-1&jobWelfareTag=-1&kw=%s&kt=3&_v=0.87230995&x-zp-page-request-id=80eb5e882e0145c48a43701726450d17-1555897693015-366844'
-    start_urls = [base_url % (start_seq, 'python')]
+    #start_urls = [base_url % (start_seq, 'python')]
     has_next = False
-
+    redis_key = "zhilian:start_urls"
     def parse(self, response):
         ret = json.loads(response.body)
         self.has_next = False

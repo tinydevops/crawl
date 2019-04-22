@@ -72,6 +72,7 @@ DEFAULT_REQUEST_HEADERS = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'job.pipelines.JobPipelineMongodb': 300,
+    'scrapy_redis.pipelines.RedisPipeline': 300,
     # 'scrapyelasticsearch.scrapyelasticsearch.ElasticSearchPipeline': 500,
 }
 
@@ -108,3 +109,23 @@ MONGODB_HOST = '127.0.0.1'
 MONGODB_PORT = 27017
 MONGODB_DBNAME = 'zhilian'  # 数据库名
 MONGODB_DOCNAME = 'jobs'  # 表名
+
+# Enables scheduling storing requests queue in redis.
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+
+# Ensure all spiders share same duplicates filter through redis.
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+
+# Don't cleanup redis queues, allows to pause/resume crawls.
+SCHEDULER_PERSIST = True
+
+# The item pipeline serializes and stores the items in this redis key.
+REDIS_ITEMS_KEY = '%(spider)s:items'
+
+
+# Specify the host and port to use when connecting to Redis (optional).
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
+# Default start urls key for RedisSpider and RedisCrawlSpider.
+REDIS_START_URLS_KEY = '%(name)s:start_urls'
